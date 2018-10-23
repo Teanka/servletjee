@@ -1,0 +1,12 @@
+<web-app>
+    <servlet>
+        <servlet-name>Servlet15</servlet-name>
+        <servlet-class>pl.coderslab.Servlet15</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Servlet15</servlet-name>
+        <url-pattern>/Servlet15</url-pattern>
+    </servlet-mapping>
+</web-app>
+
+
