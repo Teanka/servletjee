@@ -1,5 +1,7 @@
 package pl.coderslab;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,16 +12,52 @@ import java.time.LocalDate;
 
 @WebServlet(name = "Servlet16",urlPatterns = "/Servlet16")
 public class Servlet16 extends HttpServlet {
+    private static final org.apache.log4j.Logger log = Logger.getLogger(Servlet16.class);
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         request.getDateHeader(LocalDate.now().toString());
         String browser = request.getHeader("User-Agent");//wiele możliwych
+        String browser1 = "";
+        if (browser.contains("msie"))
+        {
+        String substring=browser.substring(browser.indexOf("MSIE")).split(";")[0];
+        browser=substring.split(" ")[0].replace("MSIE", "IE")+"-"+substring.split(" ")[1];
+        } else if (browser.contains("safari") && browser.contains("version"))
+        {
+        browser=(browser.substring(browser.indexOf("Safari")).split(" ")[0]).split("/")[0]+"-"+(browser.substring(browser.indexOf("Version")).split(" ")[0]).split("/")[1];
+        } else if ( browser.contains("opr") || browser.contains("opera"))
+        {
+        if(browser.contains("opera"))
+        browser=(browser.substring(browser.indexOf("Opera")).split(" ")[0]).split("/")[0]+"-"+(browser.substring(browser.indexOf("Version")).split(" ")[0]).split("/")[1];
+        else if(browser.contains("opr"))
+        browser=((browser.substring(browser.indexOf("OPR")).split(" ")[0]).replace("/", "-")).replace("OPR", "Opera");
+        } else if (browser.contains("chrome"))
+        {
+        browser=(browser.substring(browser.indexOf("Chrome")).split(" ")[0]).replace("/", "-");
+        } else if ((browser.indexOf("mozilla/7.0") > -1) || (browser.indexOf("netscape6") != -1)  || (browser.indexOf("mozilla/4.7") != -1) || (browser.indexOf("mozilla/4.78") != -1) || (browser.indexOf("mozilla/4.08") != -1) || (browser.indexOf("mozilla/3") != -1) )
+        {
+        //browser=(userAgent.substring(userAgent.indexOf("MSIE")).split(" ")[0]).replace("/", "-");
+        browser = "Netscape-?";
+
+        } else if (browser.contains("firefox"))
+        {
+        browser=(browser.substring(browser.indexOf("Firefox")).split(" ")[0]).replace("/", "-");
+        } else if(browser.contains("rv"))
+        {
+        browser="IE-" + browser.substring(browser.indexOf("rv") + 3, browser.indexOf(")"));
+        } else
+        {
+        browser = "UnKnown, More-Info: "+browser;
+        }
+//        log.info("Operating System======>"+os);
+        log.info("Browser Name==========>"+browser1);
 //        String remoteAddress = request.getHeader("X-FORWARDED-FOR");//nie działa, daje nulla
         String ipAddress = request.getRemoteAddr();//bdb
-        response.getWriter().append(ipAddress).append(LocalDate.now().toString()).append(browser);
+        response.getWriter().append(ipAddress).append(LocalDate.now().toString()).append(browser1);
     }
 //    private String getHttpMethodFrom(HttpServletRequest httpRequest) {
 //        String method = httpRequest.getHeader();
